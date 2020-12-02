@@ -60,6 +60,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuanLy_KHODataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>QuanLy_KHODataSet.xsd</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="DangNhap.resx">
       <DependentUpon>DangNhap.cs</DependentUpon>
     </EmbeddedResource>
@@ -90,6 +95,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="QuanLy_KHODataSet.xsc">
+      <DependentUpon>QuanLy_KHODataSet.xsd</DependentUpon>
+    </None>
+    <None Include="QuanLy_KHODataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>QuanLy_KHODataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="QuanLy_KHODataSet.xss">
+      <DependentUpon>QuanLy_KHODataSet.xsd</DependentUpon>
+    </None>
     <None Include="Resources\Kho-NCTS-Noi-Bai.jpg" />
   </ItemGroup>
   <ItemGroup>
