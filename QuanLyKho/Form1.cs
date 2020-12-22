@@ -13,12 +13,16 @@ namespace QuanLyKho
 {
     public partial class Trang_Chu : Form
     {
-        string chuoikn = @"Data Source=NAM\SQLDEV2019;Initial Catalog=QuanLy_KHO;Integrated Security=True";
+        string chuoikn = @"Data Source=localhost;Initial Catalog=QuanLy_KHO;Integrated Security=True";
         string sql;
         SqlConnection ketnoi;
         SqlCommand thuchien;
         SqlDataReader docdulieu;
         int i = 0;
+        string mapn;
+        string madt;
+        string macp;
+        string MaNV;
         public Trang_Chu()
         {
             InitializeComponent();
@@ -106,7 +110,11 @@ namespace QuanLyKho
         {
             pn_hanghoa.Visible = true;
             pn_hanghoa.Dock = DockStyle.Fill;
+
+            pn_DoiTra.Visible = false;
             pn_trang_chu.Visible = false;
+            pn_QL_nhap.Visible = false;
+
             button2.Font = new Font(button2.Font.FontFamily, 8);
             btn_QLXuat.Font = new Font(btn_QLXuat.Font.FontFamily, 8);
             btn_QLNhap.Font = new Font(btn_QLNhap.Font.FontFamily, 8);
@@ -127,6 +135,13 @@ namespace QuanLyKho
 
         private void btn_QLNhap_Click(object sender, EventArgs e)
         {
+            pn_QL_nhap.Visible = true;
+            pn_QL_nhap.Dock = DockStyle.Fill;
+
+            pn_DoiTra.Visible = false;
+            pn_hanghoa.Visible = false;
+            pn_trang_chu.Visible = false;
+
             button2.Font = new Font(button2.Font.FontFamily, 8);
             btn_QLXuat.Font = new Font(btn_QLXuat.Font.FontFamily, 8);
             btn_QLNhap.Font = new Font(btn_QLNhap.Font.FontFamily, 11);
@@ -146,6 +161,11 @@ namespace QuanLyKho
 
         private void btn_QLXuat_Click(object sender, EventArgs e)
         {
+            pn_DoiTra.Visible = false;
+            pn_hanghoa.Visible = false;
+            pn_QL_nhap.Visible = false;
+            pn_trang_chu.Visible = false;
+
             button2.Font = new Font(button2.Font.FontFamily, 8);
             btn_QLXuat.Font = new Font(btn_QLXuat.Font.FontFamily, 11);
             btn_QLNhap.Font = new Font(btn_QLNhap.Font.FontFamily, 8);
@@ -165,6 +185,13 @@ namespace QuanLyKho
 
         private void btn_QLDT_Click(object sender, EventArgs e)
         {
+            pn_DoiTra.Visible = true;
+            pn_DoiTra.Dock = DockStyle.Fill;
+
+            pn_hanghoa.Visible = false;
+            pn_trang_chu.Visible = false;
+            pn_QL_nhap.Visible = false;
+
             button2.Font = new Font(button2.Font.FontFamily, 8);
             btn_QLXuat.Font = new Font(btn_QLXuat.Font.FontFamily, 8);
             btn_QLNhap.Font = new Font(btn_QLNhap.Font.FontFamily, 8);
@@ -204,9 +231,13 @@ namespace QuanLyKho
             btn_QLNhap.Font = new Font(btn_QLNhap.Font.FontFamily, 8);
             btn_QLDT.Font = new Font(btn_QLDT.Font.FontFamily, 8);
             btn_QLHH.Font = new Font(btn_QLHH.Font.FontFamily, 8);
+
             pn_trang_chu.Visible = true;
             pn_trang_chu.Dock = DockStyle.Fill;
+
             pn_hanghoa.Visible = false;
+            pn_QL_nhap.Visible = false;
+            pn_DoiTra.Visible = false;
         }
 
         private void Trang_Chu_Load(object sender, EventArgs e)
@@ -414,6 +445,123 @@ namespace QuanLyKho
         private void lst_LS_doitra_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btn_Nhap_nhap_Click(object sender, EventArgs e)
+        {
+            ketnoi.Open();
+            thuchien = new SqlCommand("select count(*) from Phieunhap", ketnoi);
+            var n = (int)thuchien.ExecuteScalar();
+            n += 1;
+            if (n < 10)
+            {
+                mapn = "PN0" + n.ToString();
+            }
+            else
+            {
+                if (n >= 10 && n < 100)
+                {
+                    mapn = "PN" + n.ToString();
+                }
+                else mapn = "PN" + n.ToString();
+            }
+
+            sql = "insert into hanghoa values('" + cb_Nhap_maVPP.Text + "', N'" + txt_Nhap_tenVPP.Text + "', " + txt_Nhap_soluog.Text + ", '" + cb_Nhap_maNCC.Text + "','" + cb_Nhap_maLoaiVPP.Text + "', 0)";
+            thuchien = new SqlCommand(sql, ketnoi);
+            thuchien.ExecuteNonQuery();
+
+            sql = "insert into PHIEUNHAP values('" + mapn + "', N'Nhập " + txt_Nhap_tenloaiVPP.Text + "', 'NV01', '" + cb_Nhap_maNCC.Text + "')";
+            thuchien = new SqlCommand(sql, ketnoi);
+            thuchien.ExecuteNonQuery();
+
+            sql = "insert into ct_ph_nhap_hh values('" + cb_Nhap_maVPP.Text + "', '" + mapn + "', '" + txt_Nhap_soluog.Text + "', '" + Convert.ToDateTime(DateTime.Now.ToString("dd/MM/yyyy")) + "')";
+            thuchien = new SqlCommand(sql, ketnoi);
+            thuchien.ExecuteNonQuery();
+
+            if (cb_Nhap_maVPP.Text != "" && txt_Nhap_tenVPP.Text != "" && txt_Nhap_soluog.Text != "" && txt_Nhap_tenloaiVPP.Text != null)
+            {
+                DialogResult d = MessageBox.Show("Nhập " + txt_Nhap_tenVPP.Text + " với số lượng " + txt_Nhap_soluog.Text + " từ nhà cung cấp " + txt_Nhap_tenNCC.Text + " thành công!", "Thông báo hệ thống", MessageBoxButtons.OK, MessageBoxIcon.None);
+                if (d == DialogResult.OK)
+                {
+                    txt_Nhap_soluog.Text = "";
+                    txt_Nhap_tenloaiVPP.Text = "";
+                    txt_Nhap_tenNCC.Text = "";
+                    txt_Nhap_tenVPP.Text = "";
+                    txt_Nhap_dcNCC.Text = "";
+                    txt_Nhap_sdtNCC.Text = "";
+                }
+            }
+
+            ketnoi.Close();
+        }
+
+        private void btn_Nhap_lsNhap_Click(object sender, EventArgs e)
+        {
+            lst_Nhap_dsnhap.Items.Clear();
+            txt_Nhap_soluog.Text = "";
+            txt_Nhap_tenloaiVPP.Text = "";
+            txt_Nhap_tenNCC.Text = "";
+            txt_Nhap_tenVPP.Text = "";
+            txt_Nhap_dcNCC.Text = "";
+            txt_Nhap_sdtNCC.Text = "";
+            sql = "exec LichSuNhap";
+            ketnoi = new SqlConnection(chuoikn);
+            ketnoi.Open();
+            thuchien = new SqlCommand(sql, ketnoi);
+            docdulieu = thuchien.ExecuteReader();
+            i = 0;
+            while (docdulieu.Read())
+            {
+                string ng_nhap = Convert.ToDateTime(docdulieu[4].ToString()).ToString("dd/MM/yyyy");
+                lst_Nhap_dsnhap.Items.Add(docdulieu[0].ToString());
+                lst_Nhap_dsnhap.Items[i].SubItems.Add(docdulieu[1].ToString());
+                lst_Nhap_dsnhap.Items[i].SubItems.Add(docdulieu[2].ToString());
+                lst_Nhap_dsnhap.Items[i].SubItems.Add(docdulieu[3].ToString());
+                lst_Nhap_dsnhap.Items[i].SubItems.Add(ng_nhap);
+                lst_Nhap_dsnhap.Items[i].SubItems.Add(docdulieu[5].ToString());
+                lst_Nhap_dsnhap.Items[i].SubItems.Add(docdulieu[6].ToString());
+                //Convert.ToDateTime(DateTime.Now.ToString("dd/MM/yyyy"))
+                i++;
+            }
+            ketnoi.Close();
+        }
+
+        private void cb_Nhap_maNCC_SelectedValueChanged(object sender, EventArgs e)
+        {
+            sql = "SELECT * FROM NHACUNGCAP WHERE MA_NCC='" + cb_Nhap_maNCC.Text + "'";
+            ketnoi = new SqlConnection(chuoikn);
+            ketnoi.Open();
+            thuchien = new SqlCommand(sql, ketnoi);
+            docdulieu = thuchien.ExecuteReader(CommandBehavior.CloseConnection);
+            if (docdulieu.HasRows)
+            {
+                while (docdulieu.Read())
+                {
+                    txt_Nhap_sdtNCC.Text = docdulieu[3].ToString();
+                    txt_Nhap_tenNCC.Text = docdulieu[1].ToString();
+                    txt_Nhap_dcNCC.Text = docdulieu[2].ToString();
+                }
+
+            }
+            ketnoi.Close();
+        }
+
+        private void cb_Nhap_maLoaiVPP_SelectedValueChanged(object sender, EventArgs e)
+        {
+            sql = "SELECT * FROM LOAIHANGHOA WHERE MA_LOAI_HH='" + cb_Nhap_maLoaiVPP.Text + "'";
+            ketnoi = new SqlConnection(chuoikn);
+            ketnoi.Open();
+            thuchien = new SqlCommand(sql, ketnoi);
+            docdulieu = thuchien.ExecuteReader(CommandBehavior.CloseConnection);
+            if (docdulieu.HasRows)
+            {
+                while (docdulieu.Read())
+                {
+                    txt_Nhap_tenloaiVPP.Text = docdulieu[1].ToString();
+                }
+
+            }
+            ketnoi.Close();
         }
     }
 }
