@@ -68,6 +68,7 @@ namespace QuanLyKho
         {
             pn_hanghoa.Visible = true;
             pn_hanghoa.Dock = DockStyle.Fill;
+            pn_QL_nhap.Visible = false;
             pn_trang_chu.Visible = false;
             button2.Font = new Font(button2.Font.FontFamily, 8);
             btn_QLXuat.Font = new Font(btn_QLXuat.Font.FontFamily, 8);
@@ -111,6 +112,7 @@ namespace QuanLyKho
 
         private void btn_QLXuat_Click(object sender, EventArgs e)
         {
+            pn_QL_nhap.Visible = false;
             button2.Font = new Font(button2.Font.FontFamily, 8);
             btn_QLXuat.Font = new Font(btn_QLXuat.Font.FontFamily, 11);
             btn_QLNhap.Font = new Font(btn_QLNhap.Font.FontFamily, 8);
@@ -130,6 +132,7 @@ namespace QuanLyKho
 
         private void btn_QLDT_Click(object sender, EventArgs e)
         {
+            pn_QL_nhap.Visible = false;
             button2.Font = new Font(button2.Font.FontFamily, 8);
             btn_QLXuat.Font = new Font(btn_QLXuat.Font.FontFamily, 8);
             btn_QLNhap.Font = new Font(btn_QLNhap.Font.FontFamily, 8);
